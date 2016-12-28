@@ -1,0 +1,14 @@
+{
+  "name": "ssdbms",
+  "version": "1.0.0",
+  "description": "This is super simple database management system, mainly started to explore challenges of implementing a dbms",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kiran Gadhave",
+  "license": "ISC",
+  "dependencies": {
+    "yargs": "^6.5.0"
+  }
+}
