@@ -1,1 +1,2 @@
-var argv = require('yargs');
+var yargs   = require('yargs'),
+    argv    = yargs.argv;
