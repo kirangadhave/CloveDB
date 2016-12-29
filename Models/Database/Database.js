@@ -1,4 +1,5 @@
 /* jshint esversion: 6 */
+
 var Table = require('./Table.js');
 
 module.exports = class Database{
