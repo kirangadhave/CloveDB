@@ -1,7 +1,7 @@
 {
-  "name": "ssdbms",
+  "name": "CloveDB",
   "version": "1.0.0",
-  "description": "This is super simple database management system, mainly started to explore challenges of implementing a dbms",
+  "description": "I started CloveDB mainly to explore challenges of implementing a dbms.",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
