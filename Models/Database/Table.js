@@ -10,17 +10,32 @@ module.exports = class Table{
 
     CreateTable(tableSchema){
         if(this.AlterFlag){
-            this.HeaderElement = tableSchema;
+            this.TableSchema = tableSchema;
             this.AlterFlag = false;
-        }
-        else{
+        } else {
             var err = {
                 ExecptionName : "TableExistsExecption",
                 Message: "Please use alter query"
             };
             throw err;
         }
-    };
+    }
 
+    ShowTable(){
+        var length = 0;
+        for(let p in this.TableSchema){
+            if(p.length > length)
+                length = p.length;
+        }
+        length = length + 5;
+        var headerString = "|";
+        for(let p in this.TableSchema){
+            headerString = headerString + p;
+            for(var i=0; i<(length - p.length); i++)
+                headerString = headerString + " ";
+            headerString += "|";
+        }
+        console.log(headerString);
+    }
 
 };

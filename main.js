@@ -31,31 +31,46 @@ var argv = require('yargs')
                 }).help('help');
             }).help('help')
             .argv;
-
+var d;
 /*
     Runs the main loop to keep reading user input.
 */
 var get_query = function(){
-    rl.on('line', (input) => {
-        console.log(input);
+    rl.on('line', (c) => {
+        if(c.split(" ")[0] === "create" && c.split(" ")[1] === "database"){
+            let a = c.split(" ")[2];
+            d = new Database(a);
+            console.log(d);
+        }
+
+        if(c.split(" ")[0] === "create" && c.split(" ")[1] === "table"){
+            let a = c.split(" ");
+            var t = new Table(a[2]);
+            var schema = {};
+            for(i=4; i<a.length; i++){
+                schema[a[i]] = "";
+            }
+            t.CreateTable(schema);
+            d.AddTable(t);
+            console.log(t);
+        }
+
+        if(c.split(" ")[0] === "show"){
+            var name = c.split(" ")[2];
+
+            d.Tables[0].ShowTable();
+        }
     });
 };
 
 var Database = require("./Models/Database/Database.js");
+var Table = require("./Models/Database/Table.js");
 
 /*
     Validate the entered password and starts the main loop.
 */
 var validate = function(){
-    //get_query();
-    var d = new Database("Test");
-    d.AddTable("Table 1");
-    d.AddTable("Table 2");
-    d.AddTable("Table 3");
-    d.AddTable("Table 4");
-    console.log(d);
-    d.DeleteTable("Table 1");
-    console.log(d);
+    get_query();
 };
 
 /*

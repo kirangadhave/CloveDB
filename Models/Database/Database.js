@@ -9,8 +9,8 @@ module.exports = class Database{
     }
 
     AddTable(tableName){
-        var t = new Table(tableName);
-        this.Tables.push(t);
+        // var t = new Table(tableName);
+        this.Tables.push(tableName);
     }
 
     DeleteTable(tableName){
