@@ -37,35 +37,14 @@ var d;
 */
 var get_query = function(){
     rl.on('line', (c) => {
-        if(c.split(" ")[0] === "create" && c.split(" ")[1] === "database"){
-            let a = c.split(" ")[2];
-            d = new Database(a);
-            console.log(d);
-        }
+        var IS = new InputStream(c);
 
-        if(c.split(" ")[0] === "create" && c.split(" ")[1] === "table"){
-            let a = c.split(" ");
-            var t = new Table(a[2]);
-            var schema = {};
-            for(i=4; i<a.length; i++){
-                schema[a[i]] = "";
-            }
-            t.CreateTable(schema);
-            d.AddTable(t);
-            console.log(t);
-        }
-
-        if(c.split(" ")[0] === "show"){
-            var name = c.split(" ")[2];
-
-            d.Tables[0].ShowTable();
-        }
     });
 };
 
 var Database = require("./Models/Database/Database.js");
 var Table = require("./Models/Database/Table.js");
-
+var InputStream = require("./JPSQL/InputStream.js");
 /*
     Validate the entered password and starts the main loop.
 */
@@ -91,3 +70,33 @@ var check_password = function(argv){
     First function call.
 */
 check_password(argv);
+
+
+/*
+
+if(c.split(" ")[0] === "create" && c.split(" ")[1] === "database"){
+    let a = c.split(" ")[2];
+    d = new Database(a);
+    console.log(d);
+}
+
+if(c.split(" ")[0] === "create" && c.split(" ")[1] === "table"){
+    let a = c.split(" ");
+    var t = new Table(a[2]);
+    var schema = {};
+    for(i=4; i<a.length; i++){
+        schema[a[i]] = "";
+    }
+    t.CreateTable(schema);
+    d.AddTable(t);
+    console.log(t);
+}
+
+if(c.split(" ")[0] === "show"){
+    var name = c.split(" ")[2];
+
+    d.Tables[0].ShowTable();
+}
+
+
+*/

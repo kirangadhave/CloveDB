@@ -1,0 +1,44 @@
+* Keywords will be case-insensitive.
+    CREATE || create || cReAte
+
+*Keywords:
+    create
+    database
+    table
+    get
+    from
+    with
+
+=================================== Syntax =====================================
+Create Database
+    create database <name>;
+
+Create Table
+    create table <name> with {
+        <col-1-name> <type> <AI flag> <required flag> <pk flag>,
+        .
+        .
+        .
+        .
+        .
+        <col-n-name> <type> <AI flag> <required flag> <pk flag>
+    };
+
+Get Table
+    For all columns
+        get all/* from <db-name>.<table-name>;
+
+    For selected columns
+        get <col-1-name>, ..... , <col-n-name> from <db-name>.<table-name>;
+
+    For conditionals
+        get all/* from <db-name>.<table-name> where <col-1-name> = <value-1>, .... , <col-n-name> = <value-n>;
+        # Can be combined with selected columns
+
+Delete Table
+    delete table <table-name>;
+
+Delete Database
+    delete database <db-name>;
+
+=================================== Syntax =====================================
