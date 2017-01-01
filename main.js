@@ -38,13 +38,15 @@ var d;
 var get_query = function(){
     rl.on('line', (c) => {
         var IS = new InputStream(c);
-
+        var lex = new Lexer(IS);
+        console.log(lex.Read_Number());
     });
 };
 
 var Database = require("./Models/Database/Database.js");
 var Table = require("./Models/Database/Table.js");
 var InputStream = require("./JPSQL/InputStream.js");
+var Lexer = require("./JPSQL/Lexer.js");
 /*
     Validate the entered password and starts the main loop.
 */

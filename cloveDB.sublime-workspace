@@ -1,0 +1,282 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "main.js",
+			"settings":
+			{
+				"buffer_size": 2290,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "/* jshint esversion: 6 */\n\nvar fs = require('fs');\n\nmodule.exports = class Lexer {\n    GetKeywords() {\n        var a = fs.readFileSync(\"./JPSQL/KeywordsFile\", \"utf8\").split('\\n');\n        a.pop();\n        return a;\n    }\n\n    GetOperators() {\n        var a = fs.readFileSync(\"./JPSQL/OperatorsFile\", \"utf8\").split('\\n');\n        a.pop();\n        return a;\n    }\n\n    constructor(inputStream) {\n        this.IS = inputStream;\n        this.current = null;\n        this.Keywords = this.GetKeywords();\n        this.Operators = this.GetOperators();\n    }\n\n    Is_Keyword(word) {\n        return this.Keywords.includes(word);\n    }\n\n    Is_Digit(char) {\n        return /[0-9]/i.test(char);\n    }\n\n    Is_Punctuation(char) {\n        return \".,;(){}[]\".split(\"\").includes(char);\n    }\n\n    Is_Whitespace(char) {\n        return \" \\t\\n\".split(\"\").includes(char);\n    }\n\n    Is_ID_Start(char) {\n        return /[a-z]/i.test(char);\n    }\n\n    Is_ID(char) {\n        return Is_ID_Start(char) || \"?!-<>=0123456789\".split(\"\").inlcudes(char);\n    }\n\n    Is_Operator(char) {\n        return this.Operators.includes(char);\n    }\n\n    Read_While(predicate) {\n        var str = \"\";\n        while (!this.IS.EOF() && predicate(this.IS.Peek()))\n            str += this.IS.Next();\n        return str;\n    }\n\n    Read_Number() {\n        var t = this;\n        var has_dot = false;\n        var number = this.Read_While(function(char) {\n            if (char === \".\") {\n                if (has_dot)\n                    return false;\n                has_dot = true;\n                return true;\n            }\n            return t.Is_Digit(char);\n        });\n        return {\n            type: \"num\",\n            value: parseFloat(number)\n        };\n    }\n\n    Read_Ident() {\n        var id = this.Read_While(this.Is_Id);\n        return {\n            type: this.Is_Keyword(id) ? \"kw\" : \"var\",\n            value: id\n        };\n    }\n\n    Read_Escaped(end) {\n        var esc = false,\n            str = \"\";\n        this.IS.Next();\n        while (this.IS.EOF()) {\n            var char = this.IS.Next();\n            if (esc) {\n                str += char;\n                esc = false;\n            } else if (char === \"\\\\\") {\n                esc = true;\n            } else if (char == end) {\n                break;\n            } else {\n                str += char;\n            }\n        }\n        return str;\n    }\n\n    Read_String() {\n        return {\n            type: \"str\",\n            value: this.Read_Escaped('\"')\n        };\n    }\n\n    Skip_Comment() {\n        this.Read_While(function(char) {\n            return char != \"\\n\";\n        });\n        this.IS.Next();\n    }\n\n    Read_Next() {\n        this.Read_While(this.Is_Whitespace);\n\n    }\n\n};\n\n",
+			"file": "JPSQL/Lexer.js",
+			"file_size": 2709,
+			"file_write_time": 131277162808231200,
+			"settings":
+			{
+				"buffer_size": 2711,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 180.0,
+		"last_filter": "proj",
+		"selected_items":
+		[
+			[
+				"proj",
+				"Project: Save As"
+			],
+			[
+				"insatll",
+				"Package Control: Install Package"
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"install\t",
+				"Package Control: Install Package"
+			],
+			[
+				"in\t",
+				"Package Control: Install Package"
+			],
+			[
+				"insta\t",
+				"Package Control: Install Package"
+			],
+			[
+				"package",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 423.0
+	},
+	"console":
+	{
+		"height": 153.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = 'df21e130d211cfc94d9b0905775a7c0f' + '1e3d39e33b79698005270310898eea76'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/kbg/Projects/dbc",
+		"/home/kbg/Projects/dbc/JPSQL"
+	],
+	"file_history":
+	[
+		"/home/kbg/Projects/dbc/JPSQL/KeywordsFile"
+	],
+	"find":
+	{
+		"height": 27.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			" \""
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "main.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2290,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 57.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "JPSQL/Lexer.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2711,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2711,
+								2711
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1984.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 27.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "cloveDB.sublime-project",
+	"replace":
+	{
+		"height": 50.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
