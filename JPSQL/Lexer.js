@@ -119,6 +119,50 @@ module.exports = class Lexer {
 
     Read_Next() {
         this.Read_While(this.Is_Whitespace);
+        if(this.IS.EOF())
+            return null;
+        var char = this.IS.Peek();
+        
+        if(char === "#"){
+            this.Skip_Comment();
+            return this.Read_Next();
+        }
+
+        if(char === '"')
+            return this.Read_String();
+
+        if(this.Is_Digit(char))
+            return this.Read_Number();
+
+        if(this.Is_ID_Start(char))
+            return this.Read_Ident();
+
+        if(this.Is_Punctuation(char))
+            return{
+                type : "punc",
+                value : this.IS.Next();
+            };
+
+        if(this.Is_Operator(char))
+            return{
+                type : "op",
+                value : this.Read_While(this.Is_Operator)
+            };
+
+        this.IS.Croak("Cannot handle the character: " + char);
     }
 
+    Peek(){
+        return current || (current = this.Read_Next());
+    }
+
+    Next(){
+        var tok = current;
+        current = null;
+        return tok || this.Read_Next();
+    }
+
+    EOF(){
+        return this.Peek() === null;
+    }
 };
