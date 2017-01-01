@@ -2,19 +2,32 @@
 
 var fs = require('fs');
 
+/**
+ * This module contains Lexer Class which takes an InputStream Object as parameter and performs various lexing functions
+ */
 module.exports = class Lexer {
+    /**
+     * GetKeywords reads KeywordsFile in JPSQL folder and loads an array of keywords into Lexer.Keywords
+     */
     GetKeywords() {
         var a = fs.readFileSync("./JPSQL/KeywordsFile", "utf8").split('\n');
         a.pop();
         return a;
     }
 
+    /**
+     * GetKeywords reads OperatorsFile in JPSQL folder and loads an array of operators into Lexer.Operators
+     */
     GetOperators() {
         var a = fs.readFileSync("./JPSQL/OperatorsFile", "utf8").split('\n');
         a.pop();
         return a;
     }
 
+    /**
+     * Constructor for Lexer Class.
+     * inputStream - Takes in object of InputStream class.
+     */
     constructor(inputStream) {
         this.IS = inputStream;
         this.current = null;
@@ -22,34 +35,61 @@ module.exports = class Lexer {
         this.Operators = this.GetOperators();
     }
 
+    /**
+     * Returns true only if 'word' is a keyword.
+     */
     Is_Keyword(word) {
         return this.Keywords.includes(word);
     }
 
+    /**
+     * Returns true if regex match of 'char' with numbers is found.
+     */
     Is_Digit(char) {
         return /[0-9]/i.test(char);
     }
 
+    /**
+     * Returns true if 'char' is a punctuation.
+     * @param {[type]} char [description]
+     */
     Is_Punctuation(char) {
         return ".,;(){}[]".split("").includes(char);
     }
 
+    /**
+     * Returns true if 'char' is a whitespace character.
+     * @param {[type]} char [description]
+     */
     Is_Whitespace(char) {
         return " \t\n".split("").includes(char);
     }
 
+    /**
+     *
+     */
     Is_ID_Start(char) {
         return /[a-z]/i.test(char);
     }
 
+    /**
+     *
+     */
     Is_ID(char) {
         return Is_ID_Start(char) || "?!-<>=0123456789".split("").inlcudes(char);
     }
 
+    /**
+     * Returns true if 'char' is an operator.
+     */
     Is_Operator(char) {
         return this.Operators.includes(char);
     }
 
+    /**
+     * Reads the input stream while passed in boolean predicate function is true and input.EOF is not reached.
+     * Returns the read string.
+     */
     Read_While(predicate) {
         var str = "";
         while (!this.IS.EOF() && predicate(this.IS.Peek()))
@@ -57,6 +97,9 @@ module.exports = class Lexer {
         return str;
     }
 
+    /**
+     * Reads the string and returns parsed number.
+     */
     Read_Number() {
         var t = this;
         var has_dot = false;
@@ -75,6 +118,9 @@ module.exports = class Lexer {
         };
     }
 
+    /**
+     * Returns if the given string token is 'var' or 'keyword'/
+     */
     Read_Ident() {
         var id = this.Read_While(this.Is_Id);
         return {
@@ -83,6 +129,9 @@ module.exports = class Lexer {
         };
     }
 
+    /**
+     * Reads escape characters.
+     */
     Read_Escaped(end) {
         var esc = false,
             str = "";
@@ -103,6 +152,9 @@ module.exports = class Lexer {
         return str;
     }
 
+    /**
+     * Reads strings
+     */
     Read_String() {
         return {
             type: "str",
@@ -110,6 +162,9 @@ module.exports = class Lexer {
         };
     }
 
+    /**
+     * Skips commented code. Reads till end of line character.
+     */
     Skip_Comment() {
         this.Read_While(function(char) {
             return char != "\n";
@@ -117,10 +172,15 @@ module.exports = class Lexer {
         this.IS.Next();
     }
 
+    /**
+     * Calls the above functions as needed based on type of char being read.
+     */
     Read_Next() {
         this.Read_While(this.Is_Whitespace);
+
         if(this.IS.EOF())
             return null;
+
         var char = this.IS.Peek();
         
         if(char === "#"){
@@ -140,7 +200,7 @@ module.exports = class Lexer {
         if(this.Is_Punctuation(char))
             return{
                 type : "punc",
-                value : this.IS.Next();
+                value : this.IS.Next()
             };
 
         if(this.Is_Operator(char))

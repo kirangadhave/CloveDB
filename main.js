@@ -37,8 +37,7 @@ var d;
 */
 var get_query = function() {
     rl.on('line', (c) => {
-        var IS = new InputStream(c);
-        var lex = new Lexer(IS);
+        var lex = new Lexer(new InputStream(c));
         console.log(lex.Read_Number());
     });
 };
