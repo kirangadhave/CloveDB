@@ -99,7 +99,7 @@ module.exports = class Lexer {
             } else {
                 str += char;
             }
-        }
+        } 
         return str;
     }
 
@@ -122,4 +122,3 @@ module.exports = class Lexer {
     }
 
 };
-

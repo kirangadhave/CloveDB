@@ -17,25 +17,25 @@ const rl = readline.createInterface({
     Configure yargs for command line arguments
 */
 var argv = require('yargs')
-            .command("db_init", "Starts Database", function(yargs){
-                yargs.options({
-                    login:{
-                        demand: true,
-                        alias: 'u',
-                        type: 'string'
-                    },
-                    password:{
-                        alias: 'p',
-                        type: 'string'
-                    }
-                }).help('help');
-            }).help('help')
-            .argv;
+    .command("db_init", "Starts Database", function(yargs) {
+        yargs.options({
+            login: {
+                demand: true,
+                alias: 'u',
+                type: 'string'
+            },
+            password: {
+                alias: 'p',
+                type: 'string'
+            }
+        }).help('help');
+    }).help('help')
+    .argv;
 var d;
 /*
     Runs the main loop to keep reading user input.
 */
-var get_query = function(){
+var get_query = function() {
     rl.on('line', (c) => {
         var IS = new InputStream(c);
         var lex = new Lexer(IS);
@@ -50,16 +50,16 @@ var Lexer = require("./JPSQL/Lexer.js");
 /*
     Validate the entered password and starts the main loop.
 */
-var validate = function(){
+var validate = function() {
     get_query();
 };
 
 /*
     First function to check if password is entered. If not then prompted.
 */
-var check_password = function(argv){
-    if(argv.password === undefined){
-        rl.question("Enter Password: ", function(input){
+var check_password = function(argv) {
+    if (argv.password === undefined) {
+        rl.question("Enter Password: ", function(input) {
             argv.password = input;
             validate();
         });
