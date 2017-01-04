@@ -31,16 +31,28 @@ var argv = require('yargs')
         }).help('help');
     }).help('help')
     .argv;
-var d;
+    
 /*
     Runs the main loop to keep reading user input.
 */
 var get_query = function() {
+    let input = [];
     rl.on('line', (c) => {
-        var lex = new Lexer(new InputStream(c));
-        console.log(lex.Read_Number());
+        input.push(c)
+        if (c.includes(';')) {
+            var i = input.join('\n');
+            console.log(i);
+            process_query(i);
+        }
     });
 };
+
+var process_query = function(input) {
+    var lex = new Lexer(new InputStream(input));
+    while (lex.EOF() != true) {
+        console.log(lex.Next());
+    }
+}
 
 var Database = require("./Models/Database/Database.js");
 var Table = require("./Models/Database/Table.js");

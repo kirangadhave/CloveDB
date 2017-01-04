@@ -75,15 +75,15 @@ module.exports = class Lexer {
     /**
      *
      */
-    Is_ID(char) {
-        return Is_ID_Start(char) || "?!-<>=0123456789".split("").inlcudes(char);
+    Is_ID(char, a) {
+        return a.Is_ID_Start(char) || "?!-<>=0123456789".split("").includes(char);
     }
 
     /**
      * Returns true if 'char' is an operator.
      */
-    Is_Operator(char) {
-        return this.Operators.includes(char);
+    Is_Operator(char, a) {
+        return a.Operators.includes(char);
     }
 
     /**
@@ -92,7 +92,7 @@ module.exports = class Lexer {
      */
     Read_While(predicate) {
         var str = "";
-        while (!this.IS.EOF() && predicate(this.IS.Peek()))
+        while (!this.IS.EOF() && predicate(this.IS.Peek(), this))
             str += this.IS.Next();
         return str;
     }
@@ -119,10 +119,10 @@ module.exports = class Lexer {
     }
 
     /**
-     * Returns if the given string token is 'var' or 'keyword'/
+     * Returns if the given string token is 'str' or 'keyword'/
      */
     Read_Ident() {
-        var id = this.Read_While(this.Is_Id);
+        var id = this.Read_While(this.Is_ID);
         return {
             type: this.Is_Keyword(id) ? "kw" : "var",
             value: id
@@ -136,7 +136,7 @@ module.exports = class Lexer {
         var esc = false,
             str = "";
         this.IS.Next();
-        while (this.IS.EOF()) {
+        while (!this.IS.EOF()) {
             var char = this.IS.Next();
             if (esc) {
                 str += char;
@@ -178,51 +178,51 @@ module.exports = class Lexer {
     Read_Next() {
         this.Read_While(this.Is_Whitespace);
 
-        if(this.IS.EOF())
+        if (this.IS.EOF())
             return null;
 
         var char = this.IS.Peek();
-        
-        if(char === "#"){
+
+        if (char === "#") {
             this.Skip_Comment();
             return this.Read_Next();
         }
 
-        if(char === '"')
+        if (char === '"')
             return this.Read_String();
 
-        if(this.Is_Digit(char))
+        if (this.Is_Digit(char))
             return this.Read_Number();
 
-        if(this.Is_ID_Start(char))
+        if (this.Is_ID_Start(char))
             return this.Read_Ident();
 
-        if(this.Is_Punctuation(char))
-            return{
-                type : "punc",
-                value : this.IS.Next()
+        if (this.Is_Punctuation(char))
+            return {
+                type: "punc",
+                value: this.IS.Next()
             };
 
-        if(this.Is_Operator(char))
-            return{
-                type : "op",
-                value : this.Read_While(this.Is_Operator)
+        if (this.Is_Operator(char, this))
+            return {
+                type: "op",
+                value: this.Read_While(this.Is_Operator)
             };
 
         this.IS.Croak("Cannot handle the character: " + char);
     }
 
-    Peek(){
-        return current || (current = this.Read_Next());
+    Peek() {
+        return this.current || (this.current = this.Read_Next());
     }
 
-    Next(){
-        var tok = current;
-        current = null;
+    Next() {
+        var tok = this.current;
+        this.current = null;
         return tok || this.Read_Next();
     }
 
-    EOF(){
+    EOF() {
         return this.Peek() === null;
     }
 };
