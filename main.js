@@ -31,7 +31,7 @@ var argv = require('yargs')
         }).help('help');
     }).help('help')
     .argv;
-    
+
 /*
     Runs the main loop to keep reading user input.
 */
@@ -41,23 +41,26 @@ var get_query = function() {
         input.push(c)
         if (c.includes(';')) {
             var i = input.join('\n');
-            console.log(i);
             process_query(i);
         }
     });
 };
 
 var process_query = function(input) {
-    var lex = new Lexer(new InputStream(input));
+    let i = [];
+    let lex = new Lexer(new InputStream(input));
+    
     while (lex.EOF() != true) {
-        console.log(lex.Next());
+        i.push(lex.Next());
     }
+    let a = new Execute(i);
 }
 
 var Database = require("./Models/Database/Database.js");
 var Table = require("./Models/Database/Table.js");
 var InputStream = require("./JPSQL/InputStream.js");
 var Lexer = require("./JPSQL/Lexer.js");
+var Execute = require("./Exec/Excecute.js");
 /*
     Validate the entered password and starts the main loop.
 */
